@@ -1,19 +1,40 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {AppLoading} from 'expo';
+import {StatusBar} from 'react-native';
+import * as Font from 'expo-font';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
+import Routes from './src/routes';
+
+const customFonts = {
+  'Roboto_400Regular': require('@expo-google-fonts/roboto/Roboto_400Regular.ttf'),
+  'Roboto_500Medium': require('@expo-google-fonts/roboto/Roboto_500Medium.ttf'),
+  'Ubuntu_700Bold': require('@expo-google-fonts/ubuntu/Ubuntu_700Bold.ttf'),
+};
+
+export default class App extends React.Component {
+  state = {
+    fontsLoaded: false,
+  };
+
+  async _loadFontsAsync() {
+    await Font.loadAsync(customFonts);
+    this.setState({ fontsLoaded: true });
+  }
+
+  componentDidMount() {
+    this._loadFontsAsync();
+  }
+
+  render() {
+    if (this.state.fontsLoaded) {
+      return (
+        <>
+          <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+          <Routes />
+        </>
+      );
+    } else {
+      return <AppLoading />;
+    }
+  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
